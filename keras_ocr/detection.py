@@ -695,6 +695,7 @@ class Detector:
             )
         else:
             weights_path = None
+        del self.model
         self.model = build_keras_model(
             weights_path=weights_path, backbone_name=backbone_name, input_shape=input_shape
         )
