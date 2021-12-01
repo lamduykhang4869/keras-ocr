@@ -350,8 +350,10 @@ def build_efficientnet_backbone(inputs, backbone_name, imagenet):
     ]
 
 
-def build_keras_model(weights_path: str = None, backbone_name="vgg", inputs=None):
-    if inputs == None:
+def build_keras_model(weights_path: str = None, backbone_name="vgg", input_shape=None):
+    if input_shape is not None:
+        inputs = keras.layers.Input(input_shape)
+    else:
         inputs = keras.layers.Input((None, None, 3))
 
     if backbone_name == "vgg":
@@ -677,7 +679,7 @@ class Detector:
         load_from_torch=False,
         optimizer="adam",
         backbone_name="vgg",
-        inputs=None,
+        input_shape=None,
     ):
         if weights is not None:
             pretrained_key = (weights, load_from_torch)
@@ -694,7 +696,7 @@ class Detector:
         else:
             weights_path = None
         self.model = build_keras_model(
-            weights_path=weights_path, backbone_name=backbone_name, inputs=inputs
+            weights_path=weights_path, backbone_name=backbone_name, input_shape=input_shape
         )
         self.model.compile(loss="mse", run_eagerly = True, optimizer=optimizer)
 
